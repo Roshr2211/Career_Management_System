@@ -8,7 +8,8 @@ import Signup from './components/signup';
 import StudentProfile from './components/student_profile';
 import Skills from './components/skills';
 import Projects from './components/projects';
-import Companies from './components/companies';
+import CompanyInfo from './components/CompanyInfo';
+// import Companies from './components/companies';
 import AdditionalInfo from './components/additional_info';
 import JobListings from './components/JobListings'; // Update this line
 import '@fortawesome/fontawesome-free/css/all.min.css';
@@ -37,8 +38,8 @@ function App() {
           <Route path="/student-registration" element={<StudentRegistrationFlow />} />
           <Route path="/skills" element={<Skills />} />
           <Route path="/projects" element={<Projects />} />
-          <Route path="/companies" element={<Companies />} />
-          <Route path="/requirements" component={Requirements} />
+          <Route path="/companies" element={<CompanyInfo />} />
+          {/* <Route path="/requirements" component={Requirements} /> */}
           <Route path="/additional_info" element={<AdditionalInfo />} />
           <Route path="/JobListings" element={<JobListings />} />
         </Routes>

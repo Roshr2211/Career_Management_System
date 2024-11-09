@@ -36,6 +36,9 @@ const Dashboard = () => {
         <div className="dashboard-box">
           <Link to="/skills">Skills</Link>
         </div>
+        <div className="dashboard-box">
+          <Link to="/companies">Companies Info</Link>
+        </div>
         
       </div>
     </div>
