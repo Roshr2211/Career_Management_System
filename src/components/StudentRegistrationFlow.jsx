@@ -33,7 +33,6 @@ function StudentRegistrationFlow() {
 
     const [projects, setProjects] = useState([]);
     const [currentProject, setCurrentProject] = useState({
-        project_id: "",
         project_name: "",
         domain_name: ""
     });
@@ -41,7 +40,6 @@ function StudentRegistrationFlow() {
     // Modified to store array of skills
     const [skills, setSkills] = useState([]);
     const [currentSkill, setCurrentSkill] = useState({
-        skill_id: "",
         skill_name: "",
         proficiency_level: "Beginner",
         certifications: ""
@@ -161,7 +159,7 @@ function StudentRegistrationFlow() {
     const handleSkillsSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post("http://localhost:5001/add-skill", skillsData);
+            const response = await axios.post("http://localhost:5001/add-skills", skillsData);
             alert("Skills added successfully!");
             // Reset form and go back to step 1
             setSkillsData({
@@ -193,32 +191,62 @@ function StudentRegistrationFlow() {
         }));
     };
 
-    const addProject = () => {
-        if (currentProject.project_id && currentProject.project_name) {
-            setProjects(prev => [...prev, { ...currentProject }]);
-            setCurrentProject({
-                project_id: "",
-                project_name: "",
-                domain_name: ""
-            });
+    const addProject = async () => {
+        if (currentProject.project_name) {
+            try {
+                const response = await axios.post("http://localhost:5001/add-projects", {
+                    ...currentProject,
+                    student_id: studentData.student_id
+                });
+                
+                // Add the project to the local state with the generated ID
+                setProjects(prev => [...prev, {
+                    ...currentProject,
+                    project_id: response.data.project_id
+                }]);
+                
+                // Reset the form
+                setCurrentProject({
+                    project_name: "",
+                    domain_name: ""
+                });
+            } catch (error) {
+                console.error("Error adding project:", error);
+                alert("Failed to add project.");
+            }
         }
     };
-
     const removeProject = (index) => {
         setProjects(prev => prev.filter((_, i) => i !== index));
     };
 
-    const addSkill = () => {
-        if (currentSkill.skill_id && currentSkill.skill_name) {
-            setSkills(prev => [...prev, { ...currentSkill }]);
-            setCurrentSkill({
-                skill_id: "",
-                skill_name: "",
-                proficiency_level: "Beginner",
-                certifications: ""
-            });
+    const addSkill = async () => {
+        if (currentSkill.skill_name) {
+            try {
+                const response = await axios.post("http://localhost:5001/add-skills", {
+                    ...currentSkill,
+                    student_id: studentData.student_id
+                });
+                
+                // Add the skill to the local state with the generated ID
+                setSkills(prev => [...prev, {
+                    ...currentSkill,
+                    skill_id: response.data.skill_id
+                }]);
+                
+                // Reset the form
+                setCurrentSkill({
+                    skill_name: "",
+                    proficiency_level: "Beginner",
+                    certifications: ""
+                });
+            } catch (error) {
+                console.error("Error adding skill:", error);
+                alert("Failed to add skill.");
+            }
         }
     };
+    
 
     const removeSkill = (index) => {
         setSkills(prev => prev.filter((_, i) => i !== index));
@@ -226,19 +254,19 @@ function StudentRegistrationFlow() {
 
     const handleSubmitAll = async () => {
         try {
-            // Submit student data
-            await axios.post("http://localhost:5001/add-student", studentData);
+        //     // Submit student data
+        //     await axios.post("http://localhost:5001/add-student", studentData);
             
-            // Submit academic data
-            const academicPayload = {
-                ...academicData,
-                student_id: studentData.student_id
-            };
-            await axios.post("http://localhost:5001/add-academic-performance", academicPayload);
+        //     // Submit academic data
+        //     const academicPayload = {
+        //         ...academicData,
+        //         student_id: studentData.student_id
+        //     };
+        //     await axios.post("http://localhost:5001/add-academic-performance", academicPayload);
             
             // Submit all projects
             for (const project of projects) {
-                await axios.post("http://localhost:5001/add-project", {
+                await axios.post("http://localhost:5001/add-projects", {
                     ...project,
                     student_id: studentData.student_id
                 });
@@ -246,7 +274,7 @@ function StudentRegistrationFlow() {
             
             // Submit all skills
             for (const skill of skills) {
-                await axios.post("http://localhost:5001/add-skill", {
+                await axios.post("http://localhost:5001/add-skills", {
                     ...skill,
                     student_id: studentData.student_id
                 });
@@ -583,7 +611,7 @@ function StudentRegistrationFlow() {
                                     <div className="item-details">
                                         <strong>{project.project_name}</strong>
                                         <span>Domain: {project.domain_name}</span>
-                                        <span>ID: {project.project_id}</span>
+                                        {/* <span>ID: {project.project_id}</span> */}
                                     </div>
                                     <button 
                                         type="button" 
@@ -598,7 +626,7 @@ function StudentRegistrationFlow() {
                     )}
 
                     {/* Project input form */}
-                    <div className="form-field">
+                    {/* <div className="form-field">
                         <label>
                             Project ID:
                             <input
@@ -609,7 +637,7 @@ function StudentRegistrationFlow() {
                                 required
                             />
                         </label>
-                    </div>
+                    </div> */}
 
                     <div className="form-field">
                         <label>
@@ -689,7 +717,7 @@ function StudentRegistrationFlow() {
                     )}
 
                     {/* Skill input form */}
-                    <div className="form-field">
+                    {/* <div className="form-field">
                         <label>
                             Skill ID:
                             <input
@@ -700,7 +728,7 @@ function StudentRegistrationFlow() {
                                 required
                             />
                         </label>
-                    </div>
+                    </div> */}
 
                     <div className="form-field">
                         <label>
